@@ -1,0 +1,7 @@
+add_executable(test1_exec test1.cpp)
+target_link_libraries(test1_exec riffcpp)
+add_test(test1 test1_exec)
+configure_file(minimal.riff minimal.riff COPYONLY)
+configure_file(minimal_2.riff minimal_2.riff COPYONLY)
+configure_file(test.riff test.riff COPYONLY)
+configure_file(test_2.riff test_2.riff COPYONLY)

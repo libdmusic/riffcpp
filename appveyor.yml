@@ -1,0 +1,14 @@
+version: 1.0.0.{build}
+image:
+- Visual Studio 2017
+- Ubuntu1804
+
+build_script:
+  - mkdir build
+  - cd build
+  - cmake -DBUILD_TESTING=ON ..
+  - cmake --build .
+
+test_script:
+  - cd build
+  - ctest

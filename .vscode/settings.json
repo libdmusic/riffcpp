@@ -1,0 +1,11 @@
+{
+  
+  "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/",
+  "C_Cpp.autocomplete": "Disabled",
+  "C_Cpp.formatting": "Disabled",
+  "C_Cpp.errorSquiggles": "Disabled",
+  "C_Cpp.intelliSenseEngine": "Disabled",
+  "[cpp]": {
+    "editor.formatOnSave": true
+  }
+}
