@@ -7,7 +7,38 @@ build_script:
   - mkdir build
   - cd build
   - cmake -DBUILD_TESTING=ON ..
-  - cmake --build .
+  - cmake --build . --config Release
 
 test_script:
   - ctest
+
+for:
+-
+  matrix:
+    only:
+      - image: Ubuntu1804
+
+  after_testing:
+  - cpack -G TBZ2
+  - cpack -G TXZ
+  - cpack -G DEB
+
+for:
+-
+  matrix:
+    only:
+      - image: Visual Studio 2017
+
+  after_testing:
+  - cpack -G ZIP
+  - cpack -G 7Z
+  - cpack -G NSIS
+
+
+artifacts:
+  - path: 'build/libriffcpp-*.zip'
+  - path: 'build/libriffcpp-*.7z'
+  - path: 'build/libriffcpp-*.tar.bz2'
+  - path: 'build/libriffcpp-*.tar.xz'
+  - path: 'build/libriffcpp-*.deb'
+  - path: 'build/libriffcpp-*.exe'

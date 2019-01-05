@@ -64,6 +64,7 @@ export(PACKAGE RiffCpp)
 
 # Packaging support
 set(CPACK_PACKAGE_VENDOR "Francesco Bertolaccini")
+set(CPACK_PACKAGE_CONTACT "bertolaccinifrancesco@gmail.com")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Simple library for reading RIFF files")
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
