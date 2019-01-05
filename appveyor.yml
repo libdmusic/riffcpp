@@ -22,8 +22,6 @@ for:
   - cpack -G TBZ2
   - cpack -G TXZ
   - cpack -G DEB
-
-for:
 -
   matrix:
     only:
