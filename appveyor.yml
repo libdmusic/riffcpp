@@ -18,7 +18,7 @@ for:
     only:
       - image: Ubuntu1804
 
-  after_testing:
+  after_test:
   - cpack -G TBZ2
   - cpack -G TXZ
   - cpack -G DEB
@@ -27,7 +27,7 @@ for:
     only:
       - image: Visual Studio 2017
 
-  after_testing:
+  after_test:
   - cpack -G ZIP
   - cpack -G 7Z
   - cpack -G NSIS
