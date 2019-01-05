@@ -40,3 +40,11 @@ artifacts:
   - path: 'build/libriffcpp-*.tar.xz'
   - path: 'build/libriffcpp-*.deb'
   - path: 'build/libriffcpp-*.exe'
+
+deploy:
+  - provider: GitHub
+    artifact: /*.*/
+    draft: true
+    prerelease: false
+    on:
+      branch: master
