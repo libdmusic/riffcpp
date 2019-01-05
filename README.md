@@ -1,5 +1,7 @@
 # riffcpp
 
+[![Appveyor status](https://ci.appveyor.com/api/projects/status/github/frabert/riffcpp)](https://ci.appveyor.com/project/frabert/riffcpp)
+
 Simple library for reading RIFF files
 
 The data is read lazily, so in cases where seeking is cheaper than reading and
