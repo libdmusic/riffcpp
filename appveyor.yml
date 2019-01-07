@@ -35,7 +35,7 @@ for:
     - cd ..
     - mkdir build_x64
     - cd build_x64
-    - cmake -DBUILD_TESTING=ON -G 'Visual Studio 15 2017 Win64' ..
+    - cmake -DBUILD_TESTING=ON -G "Visual Studio 15 2017 Win64" ..
     - cmake --build . --config Release
   
   test_script:
