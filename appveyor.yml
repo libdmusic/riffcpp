@@ -3,20 +3,20 @@ image:
 - Visual Studio 2017
 - Ubuntu1804
 
-build_script:
-  - mkdir build
-  - cd build
-  - cmake -DBUILD_TESTING=ON ..
-  - cmake --build . --config Release
-
-test_script:
-  - ctest
-
 for:
 -
   matrix:
     only:
       - image: Ubuntu1804
+
+  build_script:
+    - mkdir build
+    - cd build
+    - cmake -DBUILD_TESTING=ON ..
+    - cmake --build . --config Release
+
+  test_script:
+    - ctest
 
   after_test:
   - cpack -G TBZ2
@@ -27,19 +27,42 @@ for:
     only:
       - image: Visual Studio 2017
 
+  build_script:
+    - mkdir build_x86
+    - cd build_x86
+    - cmake -DBUILD_TESTING=ON ..
+    - cmake --build . --config Release
+    - cd ..
+    - mkdir build_x64
+    - cd build_x64
+    - cmake -DBUILD_TESTING=ON -G 'Visual Studio 15 2017 Win64' ..
+    - cmake --build . --config Release
+  
+  test_script:
+    - ctest
+    - cd ../build_x86
+    - ctest
+
   after_test:
+  - cpack -G ZIP
+  - cpack -G 7Z
+  - cpack -G NSIS
+  - cd ../build_x64
   - cpack -G ZIP
   - cpack -G 7Z
   - cpack -G NSIS
 
 
 artifacts:
-  - path: 'build/libriffcpp-*.zip'
-  - path: 'build/libriffcpp-*.7z'
   - path: 'build/libriffcpp-*.tar.bz2'
   - path: 'build/libriffcpp-*.tar.xz'
   - path: 'build/libriffcpp-*.deb'
-  - path: 'build/libriffcpp-*.exe'
+  - path: 'build_x86/libriffcpp-*.exe'
+  - path: 'build_x86/libriffcpp-*.zip'
+  - path: 'build_x86/libriffcpp-*.7z'
+  - path: 'build_x64/libriffcpp-*.exe'
+  - path: 'build_x64/libriffcpp-*.zip'
+  - path: 'build_x64/libriffcpp-*.7z'
 
 deploy:
   - provider: GitHub
@@ -50,3 +73,4 @@ deploy:
     prerelease: false
     on:
       branch: master
+      APPVEYOR_REPO_TAG: true
