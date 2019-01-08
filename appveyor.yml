@@ -12,6 +12,7 @@ for:
   matrix:
     only:
       - image: Ubuntu1804
+      - platform: x64
 
   build_script:
     - mkdir build
@@ -48,18 +49,18 @@ for:
   after_test:
   - cpack -G ZIP -C Release
   - cpack -G NSIS -C Release
-  - ren libriffcpp-*.exe libriffcpp-*-Release.exe
-  - ren libriffcpp-*.zip libriffcpp-*-Release.zip
+  - ren libriffcpp-*.exe libriffcpp-*_Release.exe
+  - ren libriffcpp-*.zip libriffcpp-*_Release.zip
   - move libriffcpp-* Release
   - cpack -G ZIP -C Debug
   - cpack -G NSIS -C Debug
-  - ren libriffcpp-*.exe libriffcpp-*-Debug.exe
-  - ren libriffcpp-*.zip libriffcpp-*-Debug.zip
+  - ren libriffcpp-*.exe libriffcpp-*_Debug.exe
+  - ren libriffcpp-*.zip libriffcpp-*_Debug.zip
   - move libriffcpp-* Debug
   - cpack -G ZIP -C RelWithDebInfo
   - cpack -G NSIS -C RelWithDebInfo
-  - ren libriffcpp-*.exe libriffcpp-*-RelWithDebInfo.exe
-  - ren libriffcpp-*.zip libriffcpp-*-RelWithDebInfo.zip
+  - ren libriffcpp-*.exe libriffcpp-*_RelWithDebInfo.exe
+  - ren libriffcpp-*.zip libriffcpp-*_RelWithDebInfo.zip
   - move libriffcpp-* RelWithDebInfo
 
 
