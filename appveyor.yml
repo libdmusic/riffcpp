@@ -3,6 +3,10 @@ image:
 - Visual Studio 2017
 - Ubuntu1804
 
+platform:
+  - x86
+  - x64
+
 for:
 -
   matrix:
@@ -28,41 +32,43 @@ for:
       - image: Visual Studio 2017
 
   build_script:
-    - mkdir build_x86
-    - cd build_x86
-    - cmake -DBUILD_TESTING=ON ..
+    - mkdir build
+    - cd build
+    - if %PLATFORM%==x86 ( cmake -DBUILD_TESTING=ON .. )
+    - if %PLATFORM%==x64 ( cmake -DBUILD_TESTING=ON -G "Visual Studio 15 2017 Win64" .. )
     - cmake --build . --config Release
-    - cd ..
-    - mkdir build_x64
-    - cd build_x64
-    - cmake -DBUILD_TESTING=ON -G "Visual Studio 15 2017 Win64" ..
-    - cmake --build . --config Release
+    - cmake --build . --config Debug
+    - cmake --build . --config RelWithDebInfo
   
   test_script:
-    - ctest
-    - cd ../build_x86
-    - ctest
+    - ctest -C Debug
+    - ctest -C Release
+    - ctest -C RelWithDebInfo
 
   after_test:
-  - cpack -G ZIP
-  - cpack -G 7Z
-  - cpack -G NSIS
-  - cd ../build_x64
-  - cpack -G ZIP
-  - cpack -G 7Z
-  - cpack -G NSIS
+  - cpack -G ZIP -C Release
+  - cpack -G NSIS -C Release
+  - ren libriffcpp-*.exe libriffcpp-*-Release.exe
+  - ren libriffcpp-*.zip libriffcpp-*-Release.zip
+  - move libriffcpp-* Release
+  - cpack -G ZIP -C Debug
+  - cpack -G NSIS -C Debug
+  - ren libriffcpp-*.exe libriffcpp-*-Debug.exe
+  - ren libriffcpp-*.zip libriffcpp-*-Debug.zip
+  - move libriffcpp-* Debug
+  - cpack -G ZIP -C RelWithDebInfo
+  - cpack -G NSIS -C RelWithDebInfo
+  - ren libriffcpp-*.exe libriffcpp-*-RelWithDebInfo.exe
+  - ren libriffcpp-*.zip libriffcpp-*-RelWithDebInfo.zip
+  - move libriffcpp-* RelWithDebInfo
 
 
 artifacts:
   - path: 'build/libriffcpp-*.tar.bz2'
   - path: 'build/libriffcpp-*.tar.xz'
   - path: 'build/libriffcpp-*.deb'
-  - path: 'build_x86/libriffcpp-*.exe'
-  - path: 'build_x86/libriffcpp-*.zip'
-  - path: 'build_x86/libriffcpp-*.7z'
-  - path: 'build_x64/libriffcpp-*.exe'
-  - path: 'build_x64/libriffcpp-*.zip'
-  - path: 'build_x64/libriffcpp-*.7z'
+  - path: 'build/*/libriffcpp-*.exe'
+  - path: 'build/*/libriffcpp-*.zip'
 
 deploy:
   - provider: GitHub
