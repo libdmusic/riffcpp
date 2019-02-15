@@ -19,6 +19,7 @@ an hex dump of unknown chunks:
 #include <iostream>
 #include <string>
 
+#define RIFFCPP_IMPLEMENTATION
 #include <riffcpp/riffcpp.hpp>
 
 void print_indent(int indent) {
@@ -82,6 +83,12 @@ int main(int argc, char *argv[]) {
 ```
 
 ## Building and installing
+
+`riffcpp` is a header-only library, you just need to include the header into
+your program and it's ready to go. You just need to define `RIFFCPP_IMPLEMENTATION`
+before the first inclusion to make sure the methods are implemented.
+
+You can still have CMake "build" and install your library globally, if you wish:
 
 After downloading the sources (either by `git clone` or archive), run the following commands:
 ```

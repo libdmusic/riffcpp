@@ -3,10 +3,8 @@ include(CMakeFindDependencyMacro)
 
 list(APPEND CMAKE_MODULE_PATH ${RiffCpp_CMAKE_DIR})
 
-# NOTE Had to use find_package because find_dependency does not support COMPONENTS or MODULE until 3.8.0
-
-if(NOT TARGET RiffCpp::RiffCpp)
+if(NOT TARGET RiffCpp::riffcpp)
     include("${RiffCpp_CMAKE_DIR}/RiffCppTargets.cmake")
 endif()
 
-set(RiffCpp_LIBRARIES RiffCpp::RiffCpp)
+set(RiffCpp_LIBRARIES RiffCpp::riffcpp)

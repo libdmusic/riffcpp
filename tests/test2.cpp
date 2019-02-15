@@ -1,8 +1,8 @@
 #include "common.h"
 
 int main(int argc, char *argv[]) {
-  std::ifstream stream("test.riff", std::ios::binary);
-  std::string str1("hey this is a test"), str2("hey this is another test"),
+  std::ifstream stream("test_2.riff", std::ios::binary);
+  std::string str1("hey this is a test"), str2("hey this is another test!"),
    str3("final test");
 
   riffcpp::Chunk ch(stream, stream.tellg());

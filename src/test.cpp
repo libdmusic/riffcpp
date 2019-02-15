@@ -4,9 +4,8 @@
 #include <iostream>
 #include <string>
 
+#define RIFFCPP_IMPLEMENTATION
 #include <riffcpp/riffcpp.hpp>
-
-constexpr riffcpp::FourCC seqt_id{'s', 'e', 'q', 't'};
 
 void print_hex_dump(std::vector<char> &data, int indent) {
   int i = 0;
@@ -53,7 +52,7 @@ void print_chunks(riffcpp::Chunk &ch, int offs = 0) {
   auto id = ch.id();
   auto size = ch.size();
   auto data = ch.data();
-  if (id == riffcpp::riff_id || id == riffcpp::list_id || id == seqt_id) {
+  if (id == riffcpp::riff_id || id == riffcpp::list_id) {
     for (int i = 0; i < offs; i++) {
       std::cout << "  ";
     }

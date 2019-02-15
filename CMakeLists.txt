@@ -3,15 +3,12 @@ project(libriffcpp VERSION 1.0.0
                 DESCRIPTION "Simple library for reading RIFF files"
                 LANGUAGES CXX)
 
-add_library(riffcpp
-  src/riffcpp.cpp
-)
-
+add_library(riffcpp INTERFACE)
 add_library(RiffCpp::riffcpp ALIAS riffcpp)
 
-target_compile_features(riffcpp PUBLIC cxx_std_14)
+target_compile_features(riffcpp INTERFACE cxx_std_14)
 target_include_directories(riffcpp
-  PUBLIC
+  INTERFACE
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
@@ -71,6 +68,7 @@ set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+set(CPACK_PACKAGE_FILE_NAME libriffcpp-${CMAKE_PROJECT_VERSION})
 
 include(CPack)
 
