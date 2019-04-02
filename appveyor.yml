@@ -37,10 +37,10 @@ for:
     - cmake --build . --config $CONFIGURATION
 
   test_script:
-    - ctest
+    - ctest -C $CONFIGURATION
 
   after_test:
-  - cpack -G ZIP
+  - cpack -G ZIP -C $CONFIGURATION
 -
   matrix:
     only:
@@ -60,11 +60,11 @@ for:
     - if %LINKING%==static (ctest -C %CONFIGURATION%)
 
   after_test:
-  - cpack -G ZIP
+  - cpack -G ZIP -C %CONFIGURATION%
 
 
 artifacts:
-  - path: 'build/*/libriffcpp-*.zip'
+  - path: 'build/libriffcpp-*.zip'
 
 deploy:
   - provider: GitHub
