@@ -21,8 +21,6 @@ matrix:
   exclude:
     - image: Ubuntu1804
       platform: x86
-    - image: Ubuntu1804
-      LINKING: static
 
 for:
 -
