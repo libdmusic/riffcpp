@@ -29,7 +29,6 @@ for:
   matrix:
     only:
       - image: Ubuntu1804
-      - platform: x64
 
   build_script:
     - mkdir build
@@ -59,6 +58,9 @@ for:
   
   test_script:
     - if %LINKING%==static (ctest -C %CONFIGURATION%)
+
+  after_test:
+  - cpack -G ZIP
 
 
 artifacts:
