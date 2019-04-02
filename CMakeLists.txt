@@ -3,61 +3,70 @@ project(libriffcpp VERSION 1.0.0
                 DESCRIPTION "Simple library for reading RIFF files"
                 LANGUAGES CXX)
 
-add_library(riffcpp INTERFACE)
+add_library(riffcpp "")
 add_library(RiffCpp::riffcpp ALIAS riffcpp)
 
-target_compile_features(riffcpp INTERFACE cxx_std_14)
-target_include_directories(riffcpp
-  INTERFACE
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
-
-include(GNUInstallDirs)
-set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/RiffCpp)
-
-install(TARGETS riffcpp
-        EXPORT riffcpp-targets
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-      )
-set_target_properties(riffcpp PROPERTIES EXPORT_NAME RiffCpp)
-
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-#Export the targets to a script
-install(EXPORT riffcpp-targets
-  FILE
-    RiffCppTargets.cmake
-  NAMESPACE
-    RiffCpp::
-  DESTINATION
-    ${INSTALL_CONFIGDIR}
+target_sources(riffcpp
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/src/riffcpp.cpp
 )
 
-#Create a ConfigVersion.cmake file
+set_target_properties(riffcpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+target_compile_features(riffcpp PUBLIC cxx_std_14)
+target_include_directories(riffcpp
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+include(GNUInstallDirs)
+
+# install library files needed for linking
+install(
+    TARGETS riffcpp
+    EXPORT riffcpp-targets
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+# install the public header files
+install(
+    DIRECTORY ${CMAKE_SOURCE_DIR}/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# installs the *cmake files in share directory
+install(
+    EXPORT riffcpp-targets
+    FILE riffcpp-targets.cmake
+    NAMESPACE riffcpp::
+    DESTINATION share/riffcpp
+)
+
 include(CMakePackageConfigHelpers)
+
 write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/RiffCppConfigVersion.cmake
-    VERSION ${PROJECT_VERSION}
+    ${CMAKE_BINARY_DIR}/cmake/riffcpp-config-version.cmake
+    VERSION ${LIBRIFFCPP_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
-configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/RiffCppConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/RiffCppConfig.cmake
-    INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+configure_package_config_file(
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/riffcpp-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake/riffcpp-config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/riffcpp
 )
 
-#Install the config, configversion and custom find modules
-install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/RiffCppConfig.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/RiffCppConfigVersion.cmake
-    DESTINATION ${INSTALL_CONFIGDIR}
+install(
+    FILES
+        ${CMAKE_BINARY_DIR}/cmake/riffcpp-config.cmake
+        ${CMAKE_BINARY_DIR}/cmake/riffcpp-config-version.cmake
+    DESTINATION share/riffcpp
 )
-
-export(EXPORT riffcpp-targets FILE ${CMAKE_CURRENT_BINARY_DIR}/RiffCppTargets.cmake NAMESPACE RiffCpp::)
 
 #Register package in user's package registry
-export(PACKAGE RiffCpp)
+export(PACKAGE riffcpp)
 
 # Packaging support
 set(CPACK_PACKAGE_VENDOR "Francesco Bertolaccini")

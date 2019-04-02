@@ -1,8 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define RIFFCPP_IMPLEMENTATION
-#include <riffcpp/riffcpp.hpp>
+#include <riffcpp.hpp>
 
 #include <cstdlib>
 #include <fstream>

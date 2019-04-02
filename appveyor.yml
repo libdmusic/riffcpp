@@ -7,6 +7,23 @@ platform:
   - x86
   - x64
 
+configuration:
+  - Release
+  - Debug
+  - RelWithDebInfo
+
+environment:
+  matrix:
+    - LINKING: static
+    - LINKING: shared
+
+matrix:
+  exclude:
+    - image: Ubuntu1804
+      platform: x86
+    - image: Ubuntu1804
+      LINKING: static
+
 for:
 -
   matrix:
@@ -18,7 +35,7 @@ for:
     - mkdir build
     - cd build
     - cmake -DBUILD_TESTING=ON ..
-    - cmake --build . --config Release
+    - cmake --build . --config $CONFIGURATION
 
   test_script:
     - ctest
@@ -33,16 +50,15 @@ for:
   build_script:
     - mkdir build
     - cd build
-    - if %PLATFORM%==x86 ( cmake -DBUILD_TESTING=ON .. )
-    - if %PLATFORM%==x64 ( cmake -DBUILD_TESTING=ON -G "Visual Studio 15 2017 Win64" .. )
-    - cmake --build . --config Release
-    - cmake --build . --config Debug
-    - cmake --build . --config RelWithDebInfo
+    - set FLAGS= 
+    - if %LINKING%==static (set FLAGS=%FLAGS% -DBUILD_TESTING=ON)
+    - if %LINKING%==shared (set FLAGS=%FLAGS% -DBUILD_SHARED_LIBS=ON)
+    - if %PLATFORM%==x64 (set FLAGS=%FLAGS% -G "Visual Studio 15 2017 Win64")
+    - cmake %FLAGS% ..
+    - cmake --build . --config %CONFIGURATION%
   
   test_script:
-    - ctest -C Debug
-    - ctest -C Release
-    - ctest -C RelWithDebInfo
+    - if %LINKING%==static (ctest -C %CONFIGURATION%)
 
 
 artifacts:

@@ -4,8 +4,7 @@
 #include <iostream>
 #include <string>
 
-#define RIFFCPP_IMPLEMENTATION
-#include <riffcpp/riffcpp.hpp>
+#include <riffcpp.hpp>
 
 void print_hex_dump(std::vector<char> &data, int indent) {
   int i = 0;
