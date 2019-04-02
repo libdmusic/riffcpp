@@ -37,10 +37,10 @@ for:
     - cmake --build . --config $CONFIGURATION
 
   test_script:
-    - ctest -C $CONFIGURATION -D CPACK_PACKAGE_FILE_NAME=libriffcpp-1.0.0-$CONFIGURATION-$LINKING
+    - ctest -C $CONFIGURATION
 
   after_test:
-  - cpack -G ZIP -C $CONFIGURATION
+  - cpack -G ZIP -C $CONFIGURATION -D CPACK_PACKAGE_FILE_NAME=libriffcpp-1.0.0-$CONFIGURATION-$LINKING
 -
   matrix:
     only:
