@@ -33,11 +33,13 @@ for:
   build_script:
     - mkdir build
     - cd build
-    - cmake -DBUILD_TESTING=ON ..
+    - export BUILD_SHARED=OFF
+    - if [ "$LINKING" == "shared" ] ; then export BUILD_SHARED=ON ; fi
+    - cmake -DBUILD_SHARED_LIBS=$BUILD_SHARED -DBUILD_TESTING=ON ..
     - cmake --build . --config $CONFIGURATION
 
   test_script:
-    - ctest -C $CONFIGURATION
+    - ctest -C $CONFIGURATION -D CPACK_PACKAGE_FILE_NAME=libriffcpp-1.0.0-$CONFIGURATION-$LINKING
 
   after_test:
   - cpack -G ZIP -C $CONFIGURATION
@@ -60,7 +62,7 @@ for:
     - if %LINKING%==static (ctest -C %CONFIGURATION%)
 
   after_test:
-  - cpack -G ZIP -C %CONFIGURATION%
+    - cpack -G ZIP -C %CONFIGURATION% -D CPACK_PACKAGE_FILE_NAME=libriffcpp-1.0.0-%PLATFORM%-$CONFIGURATION-$LINKING
 
 
 artifacts:
