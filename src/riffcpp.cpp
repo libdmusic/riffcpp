@@ -1,5 +1,7 @@
 #include <riffcpp.hpp>
 
+using iter = riffcpp::Chunk::iterator;
+
 riffcpp::Chunk::Chunk(std::istream &stream, std::streampos pos)
   : m_stream(stream), m_pos(pos) {}
 
@@ -39,32 +41,28 @@ std::vector<char> riffcpp::Chunk::data() {
   return read_data;
 }
 
-riffcpp::ChunkIt riffcpp::Chunk::begin(bool no_chunk_id) {
+iter riffcpp::Chunk::begin(bool no_chunk_id) {
   std::streamoff offs{no_chunk_id ? 8 : 12};
-  return riffcpp::ChunkIt(m_stream, m_pos + offs);
+  return iter(m_stream, m_pos + offs);
 }
 
-riffcpp::ChunkIt riffcpp::Chunk::end() {
+iter riffcpp::Chunk::end() {
   std::uint32_t sz = size();
   std::streamoff offs{sz + sz % 2 + 8};
-  return riffcpp::ChunkIt(m_stream, m_pos + offs);
+  return iter(m_stream, m_pos + offs);
 }
 
-riffcpp::ChunkIt::ChunkIt(std::istream &stream, std::streampos pos)
+iter::iterator(std::istream &stream, std::streampos pos)
   : m_stream(stream), m_pos(pos) {}
 
-bool riffcpp::ChunkIt::operator==(const ChunkIt &a) const {
-  return m_pos == a.m_pos;
-}
-bool riffcpp::ChunkIt::operator!=(const ChunkIt &a) const {
-  return !(*this == a);
-}
+bool iter::operator==(const iter &a) const { return m_pos == a.m_pos; }
+bool iter::operator!=(const iter &a) const { return !(*this == a); }
 
-riffcpp::Chunk riffcpp::ChunkIt::operator*() const {
+riffcpp::Chunk iter::operator*() const {
   return riffcpp::Chunk(m_stream, m_pos);
 }
 
-riffcpp::ChunkIt &riffcpp::ChunkIt::operator++() {
+iter &iter::operator++() {
   riffcpp::Chunk chunk(m_stream, m_pos);
   std::uint32_t sz = chunk.size();
   std::streamoff offs{sz + sz % 2 + 8};
@@ -73,14 +71,8 @@ riffcpp::ChunkIt &riffcpp::ChunkIt::operator++() {
   return *this;
 }
 
-riffcpp::ChunkIt riffcpp::ChunkIt::operator++(int) {
-  riffcpp::ChunkIt it(m_stream, m_pos);
-
-  riffcpp::Chunk chunk(m_stream, m_pos);
-  std::uint32_t sz = chunk.size();
-  std::streamoff offs{sz + sz % 2 + 8};
-
-  m_pos += offs;
-
-  return it;
+iter iter::operator++(int) {
+  iter it_orig(m_stream, m_pos);
+  this->operator++();
+  return it_orig;
 }

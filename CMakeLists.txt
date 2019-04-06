@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.1)
-project(libriffcpp VERSION 1.0.0
+project(riffcpp VERSION 1.0.0
                 DESCRIPTION "Simple library for reading RIFF files"
                 LANGUAGES CXX)
 
 add_library(riffcpp "")
 add_library(RiffCpp::riffcpp ALIAS riffcpp)
+
+set(RIFFCPP_EXAMPLE_INSTALL_DIR "bin" CACHE "PATH" "Where to install the example executable")
+option(RIFFCPP_INSTALL_EXAMPLE "Install example executable" ON)
 
 target_sources(riffcpp
     PRIVATE
@@ -18,6 +21,9 @@ target_include_directories(riffcpp
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
+
+add_executable(riff_dump ${CMAKE_CURRENT_LIST_DIR}/src/test.cpp)
+target_link_libraries(riff_dump PRIVATE riffcpp)
 
 include(GNUInstallDirs)
 
@@ -48,7 +54,7 @@ include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(
     ${CMAKE_BINARY_DIR}/cmake/riffcpp-config-version.cmake
-    VERSION ${LIBRIFFCPP_VERSION}
+    VERSION ${RIFFCPP_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
@@ -65,6 +71,13 @@ install(
     DESTINATION share/riffcpp
 )
 
+if(RIFFCPP_INSTALL_EXAMPLE)
+    install(
+        TARGETS riff_dump
+        RUNTIME DESTINATION ${RIFFCPP_EXAMPLE_INSTALL_DIR}
+    )
+endif()
+
 #Register package in user's package registry
 export(PACKAGE riffcpp)
 
@@ -77,7 +90,6 @@ set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-set(CPACK_PACKAGE_FILE_NAME libriffcpp-${CMAKE_PROJECT_VERSION})
 
 include(CPack)
 

@@ -33,4 +33,22 @@ int main(int argc, char *argv[]) {
   data = subchunks_2[0].data();
   TEST_ASSERT(std::string(data.data(), data.size()) == str3,
               "Strings must be equal");
+
+  // Test prefix and postfix increment operators
+  auto first_it = ch.begin();
+  auto first = *(first_it++);
+  auto second = *first_it;
+
+  TEST_ASSERT(first.id() == riffcpp::list_id, "Subchunk must have 'LIST' id");
+  TEST_ASSERT(first.type() == tst1_id, "Subchunk must have 'LIST' id");
+  TEST_ASSERT(second.id() == seqt_id, "Subchunk must have 'seqt' id");
+
+  auto first_it2 = ch.begin();
+  auto first2 = *first_it2;
+  ++first_it2;
+  auto second2 = *first_it2;
+
+  TEST_ASSERT(first2.id() == riffcpp::list_id, "Subchunk must have 'LIST' id");
+  TEST_ASSERT(first2.type() == tst1_id, "Subchunk must have 'LIST' id");
+  TEST_ASSERT(second2.id() == seqt_id, "Subchunk must have 'seqt' id");
 }

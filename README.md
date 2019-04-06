@@ -12,6 +12,7 @@ memory usage.
 
 The following example program prints the structure of the RIFF file, and provides
 an hex dump of unknown chunks:
+
 ```c++
 #include <cstdint>
 #include <fstream>
@@ -84,9 +85,8 @@ int main(int argc, char *argv[]) {
 ## Building and installing
 
 After downloading the sources (either by `git clone` or archive), run the following commands:
-```
-mkdir build_riffcpp
-cd build_riffcpp
-cmake path/to/riffcpp
-cmake --build . --target INSTALL
-```
+
+    mkdir build_riffcpp
+    cd build_riffcpp
+    cmake path/to/riffcpp
+    cmake --build . --target INSTALL

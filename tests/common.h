@@ -19,6 +19,8 @@ constexpr riffcpp::FourCC tst2_id{'t', 's', 't', '2'};
       std::cerr << "Assertion failed on line " << __LINE__ << ": " #expr "\n"  \
                 << "Reason: " << (msg) << '\n';                                \
       std::exit(EXIT_FAILURE);                                                 \
+    } else {                                                                   \
+      std::cout << "" #expr " (" << __LINE__ << "): OK\n";                     \
     }                                                                          \
   }
 
