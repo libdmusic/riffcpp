@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(riffcpp VERSION 1.0.0
+project(riffcpp VERSION 2.0.0
                 DESCRIPTION "Simple library for reading RIFF files"
                 LANGUAGES CXX)
 
