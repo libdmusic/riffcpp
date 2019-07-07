@@ -9,6 +9,9 @@ add_library(RiffCpp::riffcpp ALIAS riffcpp)
 set(RIFFCPP_EXAMPLE_INSTALL_DIR "bin" CACHE "PATH" "Where to install the example executable")
 option(RIFFCPP_INSTALL_EXAMPLE "Install example executable" ON)
 
+include(GenerateExportHeader)
+generate_export_header(riffcpp)
+
 target_sources(riffcpp
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src/riffcpp.cpp
@@ -18,6 +21,7 @@ target_compile_features(riffcpp PUBLIC cxx_std_14)
 target_include_directories(riffcpp
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         $<INSTALL_INTERFACE:include>
 )
 
@@ -38,6 +42,11 @@ install(
 # install the public header files
 install(
     DIRECTORY ${CMAKE_SOURCE_DIR}/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(
+    FILES ${PROJECT_BINARY_DIR}/riffcpp_export.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 

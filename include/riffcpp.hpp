@@ -9,6 +9,8 @@
 #include <stddef.h>
 #include <vector>
 
+#include "riffcpp_export.h"
+
 namespace riffcpp {
   /// Represents a FourCC
   /**
@@ -30,7 +32,7 @@ namespace riffcpp {
     as its contents, and in those cases a second FourCC is used to distinguish
     the chunk type.
   */
-  class Chunk {
+  class RIFFCPP_EXPORT Chunk {
   public:
     class iterator;
 
@@ -69,7 +71,7 @@ namespace riffcpp {
     std::uint32_t size();
 
     /// Provides a way to iterate over subchunks
-    class iterator {
+    class RIFFCPP_EXPORT iterator {
       class impl;
       std::unique_ptr<riffcpp::Chunk::iterator::impl> pimpl;
 
