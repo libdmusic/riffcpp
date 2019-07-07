@@ -74,10 +74,8 @@ void print_chunks(riffcpp::Chunk &ch, int offs = 0) {
 }
 
 int main(int argc, char *argv[]) {
-  std::ifstream stream(argv[1], std::ios::binary);
-
-  // Read the chunk from the current position
-  riffcpp::Chunk ch(stream, stream.tellg());
+  // Read the chunk from a file
+  riffcpp::Chunk ch(argv[1]);
   print_chunks(ch);
 }
 ```
