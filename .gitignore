@@ -1,6 +1,7 @@
 .vscode/cquery_cached_index
 .vscode/launch.json
 .vscode/tasks.json
+.ccls-cache
 build
 docs
 tests/Testing

@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <istream>
 #include <iterator>
+#include <memory>
+#include <stddef.h>
 #include <vector>
 
 namespace riffcpp {
@@ -21,8 +23,6 @@ namespace riffcpp {
   /// The `LIST` FourCC, used to identify chunks that contain other chunks
   constexpr FourCC list_id = {'L', 'I', 'S', 'T'};
 
-  class ChunkIt;
-
   /// Represents a RIFF chunk
   /**
     Every chunk has a four byte identifier (FourCC) and some contents.
@@ -31,18 +31,33 @@ namespace riffcpp {
     the chunk type.
   */
   class Chunk {
-    std::istream &m_stream;
-    std::streampos m_pos;
+  public:
+    class iterator;
+
+  private:
+    class impl;
+
+    std::unique_ptr<impl> pimpl;
+    friend class iterator;
+
+    Chunk(std::unique_ptr<impl> &&impl);
 
   public:
-    /// Reads a chunk from the specified stream position
+    // Loads a chunk from a file
     /**
-      The chunk's data is not read initially, it is only loaded when requested
-      via the various methods provided.
+      Opens the specified file in read-only mode and
+      reads it as a chunk
+     */
+    Chunk(const char *filename);
 
-      The stream needs to be able to seek to arbitrary positions.
-    */
-    Chunk(std::istream &stream, std::streampos pos);
+    // Loads the specified buffer as a chunk
+    Chunk(const void *buffer, std::size_t length);
+
+    Chunk(const riffcpp::Chunk &ch);
+
+    Chunk &operator=(const Chunk &lhs);
+
+    ~Chunk();
 
     /// The chunk's identifier
     FourCC id();
@@ -55,18 +70,20 @@ namespace riffcpp {
 
     /// Provides a way to iterate over subchunks
     class iterator {
-      std::streampos m_pos;   ///< Position of the chunk in the stream
-      std::istream &m_stream; ///< Stream of the chunk
+      class impl;
+      std::unique_ptr<riffcpp::Chunk::iterator::impl> pimpl;
+
+      iterator(std::unique_ptr<riffcpp::Chunk::iterator::impl> &&impl);
+
+      friend class Chunk;
 
     public:
+      iterator(const iterator &it);
       using value_type = riffcpp::Chunk;
       using reference = value_type &;
       using pointer = value_type *;
       using difference_type = std::ptrdiff_t;
       using iterator_category = std::input_iterator_tag;
-
-      /// Creates an iterator starting from the specified stream position
-      iterator(std::istream &stream, std::streampos pos);
 
       /// Returns whether two iterators point to the same chunk
       bool operator==(const iterator &a) const;
@@ -82,6 +99,8 @@ namespace riffcpp {
       /// Moves the iterator ahead, to point to the following iterator and
       /// returns an iterator to the current position
       iterator operator++(int);
+
+      ~iterator();
     };
 
     /// If this chunk contains other chunks, returns an iterator to the first

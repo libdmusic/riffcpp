@@ -14,7 +14,6 @@ target_sources(riffcpp
         ${CMAKE_CURRENT_LIST_DIR}/src/riffcpp.cpp
 )
 
-set_target_properties(riffcpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 target_compile_features(riffcpp PUBLIC cxx_std_14)
 target_include_directories(riffcpp
     PUBLIC

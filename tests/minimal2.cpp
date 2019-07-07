@@ -1,8 +1,8 @@
-#include "common.h"
+#include "common.hpp"
 
 int main(int argc, char *argv[]) {
   std::ifstream stream("minimal_2.riff", std::ios::binary);
-  riffcpp::Chunk ch(stream, stream.tellg());
+  riffcpp::Chunk ch("minimal_2.riff");
   TEST_ASSERT(ch.id() == riffcpp::riff_id, "Toplevel 'RIFF' id expected");
   TEST_ASSERT(ch.type() == smpl_id, "Expected 'smpl' chunk");
   std::vector<riffcpp::Chunk> chunks(ch.begin(), ch.end());

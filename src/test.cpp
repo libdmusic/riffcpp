@@ -71,8 +71,7 @@ void print_chunks(riffcpp::Chunk &ch, int offs = 0) {
 }
 
 int main(int argc, char *argv[]) {
-  std::ifstream stream(argv[1], std::ios::binary);
-  riffcpp::Chunk ch(stream, stream.tellg());
+  riffcpp::Chunk ch(argv[1]);
   print_chunks(ch);
   return 0;
 }
