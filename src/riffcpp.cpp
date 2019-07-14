@@ -1,66 +1,8 @@
+#include "membuffer.hpp"
 #include <fstream>
 #include <riffcpp.hpp>
-#include <streambuf>
 
 using iter = riffcpp::Chunk::iterator;
-
-class membuffer : public std::streambuf {
-public:
-  membuffer(char *begin, size_t size)
-    : m_begin(begin), m_current(begin), m_size(size) {}
-
-protected:
-  virtual pos_type seekoff(off_type off, std::ios_base::seekdir dir,
-                           std::ios_base::openmode which) override {
-    if (dir == std::ios_base::beg) {
-      m_current = m_begin + off;
-    } else if (dir == std::ios_base::cur) {
-      m_current += off;
-    } else if (dir == std::ios_base::end) {
-      m_current = (m_begin + m_size) + off;
-    }
-
-    if (m_current > m_begin + m_size || m_current < m_begin) {
-      return -1;
-    }
-
-    return m_current - m_begin;
-  }
-
-  virtual pos_type seekpos(pos_type pos,
-                           std::ios_base::openmode which) override {
-    if (pos > m_size) {
-      return -1;
-    }
-    m_current = m_begin + static_cast<off_type>(pos);
-    return m_current - m_begin;
-  }
-
-  virtual int_type underflow() override {
-    if (m_current == m_begin + m_size) {
-      return traits_type::eof();
-    }
-
-    return *m_current;
-  }
-
-  virtual int_type uflow() override {
-    if (m_current == m_begin + m_size) {
-      return traits_type::eof();
-    }
-
-    return *m_current++;
-  }
-
-  virtual std::streamsize showmanyc() override {
-    return (m_begin + m_size) - m_current;
-  }
-
-private:
-  char *m_begin;
-  char *m_current;
-  size_t m_size;
-};
 
 class riffcpp::Chunk::iterator::impl {
 public:
@@ -73,6 +15,7 @@ public:
   std::shared_ptr<std::istream> m_stream = nullptr;
   std::shared_ptr<std::streambuf> m_buf = nullptr;
   std::streampos m_pos;
+  std::streampos m_limit;
 };
 
 riffcpp::Chunk::Chunk(const char *filename) {
