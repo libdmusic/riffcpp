@@ -19,64 +19,84 @@ an hex dump of unknown chunks:
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <riffcpp.hpp>
-
-void print_indent(int indent) {
-  for (int j = 0; j < indent; j++) {
-    std::cout << "  ";
-  }
-}
 
 void print_hex_dump(std::vector<char> &data, int indent) {
   int i = 0;
   for (char c : data) {
     if (i % 16 == 0) {
-      print_indent(indent);
+      for (int j = 0; j < indent; j++) {
+        std::cout << "  ";
+      }
     }
     std::cout << std::setfill('0') << std::setw(2) << std::hex
               << (int)((unsigned char)c) << ' ';
     if (i % 16 == 15) {
-      std::cout << '\n';
+      std::cout << "  ";
+      for (int j = 0; j < 16; j++) {
+        char x = data[i - 15 + j];
+        if (x >= 0x20 && x <= 0x7E) {
+          std::cout << x;
+        } else {
+          std::cout << '.';
+        }
+      }
+      std::cout << std::endl;
     }
     i++;
   }
   if (i % 16 != 0) {
-    i = i % 16;
-    for (; i < 16; i++) {
+    for (int k = i % 16; k < 16; k++) {
       std::cout << "-- ";
     }
+    std::cout << "  ";
+    for (int j = 0; j < i % 16; j++) {
+      char x = data[i - (i % 16) + j];
+      if (x >= 0x20 && x <= 0x7E) {
+        std::cout << x;
+      } else {
+        std::cout << '.';
+      }
+    }
   }
-  std::cout << std::dec << '\n';
+  std::cout << std::dec << std::endl;
 }
 
 void print_chunks(riffcpp::Chunk &ch, int offs = 0) {
-  auto id = ch.id();     // Reads the chunk's id
-  auto size = ch.size(); // Reads the chunk's size
+  auto id = ch.id();
+  auto size = ch.size();
+  std::vector<char> buffer;
+  buffer.resize(size);
+  ch.read_data(buffer.data(), buffer.size());
   if (id == riffcpp::riff_id || id == riffcpp::list_id) {
-    // The chunk is either a 'RIFF' or a 'LIST', so it contains subchunks
-    print_indent(offs);
-    auto type = ch.type(); // Reads the chunk's type
+    for (int i = 0; i < offs; i++) {
+      std::cout << "  ";
+    }
+    auto type = ch.type();
     std::cout << std::string(id.data(), 4) << " " << std::string(type.data(), 4)
-              << " size: " << size << "\n";
-
-    // Iterate subchunks
+              << " size: " << size << std::endl;
     for (auto ck : ch) {
       print_chunks(ck, offs + 1);
     }
   } else {
-    // The chunk is an unknown type, provide an hexdump
-    auto data = ch.data();
-    print_indent(offs);
-    std::cout << std::string(id.data(), 4) << " size: " << size << "\n";
-    print_hex_dump(data, offs + 1);
+    for (int i = 0; i < offs; i++) {
+      std::cout << "  ";
+    }
+    std::cout << std::string(id.data(), 4) << " size: " << size << std::endl;
+    print_hex_dump(buffer, offs + 1);
   }
 }
 
 int main(int argc, char *argv[]) {
-  // Read the chunk from a file
   riffcpp::Chunk ch(argv[1]);
-  print_chunks(ch);
+  try {
+    print_chunks(ch);
+  } catch (riffcpp::Error &e) {
+    std::cerr << "\n Error: " << e.what() << std::endl;
+  }
+  return 0;
 }
 ```
 
