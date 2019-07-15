@@ -16,6 +16,7 @@ target_sources(riffcpp
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src/riffcpp.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/membuffer.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/Error.cpp
 )
 
 target_compile_features(riffcpp PUBLIC cxx_std_14)

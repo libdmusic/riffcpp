@@ -7,11 +7,27 @@
 #include <iterator>
 #include <memory>
 #include <stddef.h>
+#include <string>
 #include <vector>
 
 #include "riffcpp_export.h"
 
 namespace riffcpp {
+  enum class ErrorType : int {
+    NullBuffer = 0,
+    CannotOpenFile = 1,
+    InvalidFile = 2
+  };
+
+  class RIFFCPP_EXPORT Error : public std::runtime_error {
+    ErrorType m_type;
+
+  public:
+    Error(const std::string &message, ErrorType type);
+
+    ErrorType type() const;
+  };
+
   /// Represents a FourCC
   /**
     This is a sequence of four bytes used to identify the various types of RIFF
