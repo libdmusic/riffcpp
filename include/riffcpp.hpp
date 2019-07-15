@@ -2,13 +2,13 @@
 #define RIFFCPP_H
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <istream>
 #include <iterator>
 #include <memory>
-#include <stddef.h>
 #include <string>
-#include <vector>
+
 
 #include "riffcpp_export.h"
 
@@ -130,12 +130,17 @@ namespace riffcpp {
     iterator begin(bool no_chunk_id = false);
 
     ///  If this chunk contains other chunks, returns an iterator pointing past
-    ///  the
-    /// last chunk contained
+    ///  the last chunk contained
     iterator end();
 
-    /// Returns the raw contents of the chunk
-    std::vector<char> data();
+    /// Reads the contents of the chunk into a buffer
+    /**
+     * This function will read at most `buffer_sz` bytes from the chunk or the
+     * amount returned by `size()`, whichever is smaller.
+     *
+     * It will return the number of read bytes.
+     */
+    std::size_t read_data(char *buffer, std::size_t buffer_sz);
 
     using value_type = Chunk;
     using reference = value_type &;

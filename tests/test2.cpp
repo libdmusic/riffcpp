@@ -3,6 +3,7 @@
 void test_chunk(riffcpp::Chunk &ch) {
   std::string str1("hey this is a test"), str2("hey this is another test!"),
    str3("final test");
+  std::vector<char> buffer;
 
   TEST_ASSERT(ch.id() == riffcpp::riff_id, "Toplevel 'RIFF' id expected");
   TEST_ASSERT(ch.type() == smpl_id, "Expected 'smpl' chunk");
@@ -15,12 +16,14 @@ void test_chunk(riffcpp::Chunk &ch) {
   std::vector<riffcpp::Chunk> subchunks_1{chunks[0].begin(), chunks[0].end()};
   TEST_ASSERT(subchunks_1.size() == 2, "Subchunk must have two subchunks");
   TEST_ASSERT(subchunks_1[0].id() == test_id, "Subchunk must have 'test' id");
-  auto data = subchunks_1[0].data();
-  TEST_ASSERT(std::string(data.data(), data.size()) == str1,
+  buffer.resize(subchunks_1[0].size());
+  subchunks_1[0].read_data(buffer.data(), buffer.size());
+  TEST_ASSERT(std::string(buffer.data(), buffer.size()) == str1,
               "Strings must be equal");
   TEST_ASSERT(subchunks_1[1].id() == test_id, "Subchunk must have 'test' id");
-  data = subchunks_1[1].data();
-  TEST_ASSERT(std::string(data.data(), data.size()) == str2,
+  buffer.resize(subchunks_1[1].size());
+  subchunks_1[1].read_data(buffer.data(), buffer.size());
+  TEST_ASSERT(std::string(buffer.data(), buffer.size()) == str2,
               "Strings must be equal");
 
   TEST_ASSERT(chunks[1].id() == seqt_id, "Subchunk must have 'seqt' id");
@@ -28,8 +31,9 @@ void test_chunk(riffcpp::Chunk &ch) {
                                           chunks[1].end()};
   TEST_ASSERT(subchunks_2.size() == 1, "Subchunk must have one subchunk");
   TEST_ASSERT(subchunks_2[0].id() == test_id, "Subchunk must have 'test' id");
-  data = subchunks_2[0].data();
-  TEST_ASSERT(std::string(data.data(), data.size()) == str3,
+  buffer.resize(subchunks_2[0].size());
+  subchunks_2[0].read_data(buffer.data(), buffer.size());
+  TEST_ASSERT(std::string(buffer.data(), buffer.size()) == str3,
               "Strings must be equal");
 }
 

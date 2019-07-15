@@ -7,7 +7,9 @@ int main(int argc, char *argv[]) {
   std::vector<riffcpp::Chunk> chunks(ch.begin(), ch.end());
   TEST_ASSERT(chunks.size() == 1, "Toplevel chunk must contain one subchunk");
   TEST_ASSERT(chunks[0].id() == test_id, "Subchunk must have 'test' id");
-  auto data = chunks[0].data();
-  TEST_ASSERT(data.size() == 1, "Subchunk must have data size 1");
-  TEST_ASSERT((unsigned char)data[0] == 0xFF, "Subchunk must contain '0xFF'");
+  std::vector<char> buffer;
+  buffer.resize(chunks[0].size());
+  chunks[0].read_data(buffer.data(), buffer.size());
+  TEST_ASSERT(buffer.size() == 1, "Subchunk must have data size 1");
+  TEST_ASSERT((unsigned char)buffer[0] == 0xFF, "Subchunk must contain '0xFF'");
 }

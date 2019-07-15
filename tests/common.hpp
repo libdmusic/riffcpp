@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 constexpr riffcpp::FourCC seqt_id{'s', 'e', 'q', 't'};
 constexpr riffcpp::FourCC smpl_id{'s', 'm', 'p', 'l'};

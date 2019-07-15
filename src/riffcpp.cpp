@@ -131,17 +131,16 @@ riffcpp::FourCC riffcpp::Chunk::type() {
   return read_type;
 }
 
-std::vector<char> riffcpp::Chunk::data() {
+std::size_t riffcpp::Chunk::read_data(char *buffer, std::size_t buffer_sz) {
   std::streamoff offs{8};
   pimpl->m_stream->seekg(pimpl->m_pos + offs);
 
   std::uint32_t data_size = size();
 
-  std::vector<char> read_data;
-  read_data.resize(data_size);
+  std::size_t to_read = buffer_sz < data_size ? buffer_sz : data_size;
 
-  pimpl->m_stream->read(read_data.data(), data_size);
-  return read_data;
+  pimpl->m_stream->read(buffer, to_read);
+  return to_read;
 }
 
 iter riffcpp::Chunk::begin(bool no_chunk_id) {

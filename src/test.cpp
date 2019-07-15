@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <riffcpp.hpp>
 
@@ -50,7 +51,9 @@ void print_hex_dump(std::vector<char> &data, int indent) {
 void print_chunks(riffcpp::Chunk &ch, int offs = 0) {
   auto id = ch.id();
   auto size = ch.size();
-  auto data = ch.data();
+  std::vector<char> buffer;
+  buffer.resize(size);
+  ch.read_data(buffer.data(), buffer.size());
   if (id == riffcpp::riff_id || id == riffcpp::list_id) {
     for (int i = 0; i < offs; i++) {
       std::cout << "  ";
@@ -66,7 +69,7 @@ void print_chunks(riffcpp::Chunk &ch, int offs = 0) {
       std::cout << "  ";
     }
     std::cout << std::string(id.data(), 4) << " size: " << size << std::endl;
-    print_hex_dump(data, offs + 1);
+    print_hex_dump(buffer, offs + 1);
   }
 }
 
