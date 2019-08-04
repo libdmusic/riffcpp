@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(riffcpp VERSION 2.2.0
+project(riffcpp VERSION 2.2.1
                 DESCRIPTION "Simple library for reading RIFF files"
                 LANGUAGES CXX)
 
@@ -92,7 +92,7 @@ export(PACKAGE riffcpp)
 
 # Packaging support
 set(CPACK_PACKAGE_VENDOR "Francesco Bertolaccini")
-set(CPACK_PACKAGE_CONTACT "bertolaccinifrancesco@gmail.com")
+set(CPACK_PACKAGE_CONTACT "francesco@bertolaccini.dev")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Simple library for reading RIFF files")
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
