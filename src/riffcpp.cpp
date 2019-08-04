@@ -1,5 +1,7 @@
 #include "membuffer.hpp"
 #include <fstream>
+#include <iostream>
+#include <memory>
 #include <riffcpp.hpp>
 
 using iter = riffcpp::Chunk::iterator;
