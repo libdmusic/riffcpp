@@ -49,7 +49,7 @@ static riffcpp::FourCC read_size_as_id(std::shared_ptr<std::istream> stream,
 }
 
 riffcpp::Chunk::Chunk(const char *filename) {
-  pimpl = std::make_unique<riffcpp::Chunk::impl>();
+  pimpl = new riffcpp::Chunk::impl();
   auto stream = std::make_shared<std::ifstream>(filename, std::ios::binary);
 
   if (!stream->is_open()) {
@@ -71,7 +71,7 @@ riffcpp::Chunk::Chunk(const char *filename) {
 }
 
 riffcpp::Chunk::Chunk(const Chunk &ch) {
-  pimpl = std::make_unique<riffcpp::Chunk::impl>();
+  pimpl = new riffcpp::Chunk::impl();
   pimpl->m_buf = ch.pimpl->m_buf;
   pimpl->m_stream = ch.pimpl->m_stream;
   pimpl->m_pos = ch.pimpl->m_pos;
@@ -95,7 +95,7 @@ riffcpp::Chunk::Chunk(const void *buffer, std::size_t len) {
     throw Error("Null buffer", ErrorType::NullBuffer);
   }
 
-  pimpl = std::make_unique<riffcpp::Chunk::impl>();
+  pimpl = new riffcpp::Chunk::impl();
 
   const char *charbuf = static_cast<const char *>(buffer);
 
@@ -113,11 +113,9 @@ riffcpp::Chunk::Chunk(const void *buffer, std::size_t len) {
   }
 }
 
-riffcpp::Chunk::Chunk(std::unique_ptr<riffcpp::Chunk::impl> &&impl) {
-  pimpl = std::move(impl);
-}
+riffcpp::Chunk::Chunk(riffcpp::Chunk::impl *impl) { pimpl = std::move(impl); }
 
-riffcpp::Chunk::~Chunk() = default;
+riffcpp::Chunk::~Chunk() { delete pimpl; };
 
 riffcpp::FourCC riffcpp::Chunk::id() { return pimpl->m_id; }
 
@@ -145,29 +143,29 @@ std::size_t riffcpp::Chunk::read_data(char *buffer, std::size_t buffer_sz) {
 
 iter riffcpp::Chunk::begin(bool no_chunk_id) {
   std::streamoff offs{no_chunk_id ? 8 : 12};
-  auto it = std::make_unique<riffcpp::Chunk::iterator::impl>();
+  auto it = new riffcpp::Chunk::iterator::impl();
   it->m_pos = pimpl->m_pos + offs;
   it->m_stream = pimpl->m_stream;
   it->m_limit = pimpl->m_limit;
 
-  return iter{std::move(it)};
+  return iter{it};
 }
 
 iter riffcpp::Chunk::end() {
   std::uint32_t sz = size();
   std::streamoff offs{sz + sz % 2 + 8};
 
-  auto it = std::make_unique<riffcpp::Chunk::iterator::impl>();
+  auto it = new riffcpp::Chunk::iterator::impl();
   it->m_pos = pimpl->m_pos + offs;
   it->m_stream = pimpl->m_stream;
   it->m_limit = pimpl->m_limit;
 
-  return iter(std::move(it));
+  return iter{it};
 }
 
-iter::iterator(std::unique_ptr<riffcpp::Chunk::iterator::impl> &&impl) {
-  pimpl = std::move(impl);
-}
+iter::iterator(riffcpp::Chunk::iterator::impl *impl) { pimpl = impl; }
+
+iter::~iterator() { delete pimpl; }
 
 bool iter::operator==(const iter &a) const {
   return pimpl->m_pos == a.pimpl->m_pos;
@@ -175,7 +173,7 @@ bool iter::operator==(const iter &a) const {
 bool iter::operator!=(const iter &a) const { return !(*this == a); }
 
 riffcpp::Chunk iter::operator*() const {
-  auto im = std::make_unique<riffcpp::Chunk::impl>();
+  auto im = new riffcpp::Chunk::impl();
   im->m_stream = pimpl->m_stream;
   im->m_pos = pimpl->m_pos;
 
@@ -192,11 +190,11 @@ riffcpp::Chunk iter::operator*() const {
 
   im->m_limit = limit;
 
-  return riffcpp::Chunk(std::move(im));
+  return riffcpp::Chunk{im};
 }
 
 iter &iter::operator++() {
-  auto im = std::make_unique<riffcpp::Chunk::impl>();
+  auto im = new riffcpp::Chunk::impl();
   im->m_stream = pimpl->m_stream;
   im->m_pos = pimpl->m_pos;
 
@@ -210,7 +208,7 @@ iter &iter::operator++() {
   }
   im->m_limit = limit;
 
-  riffcpp::Chunk chunk(std::move(im));
+  riffcpp::Chunk chunk{im};
   std::uint32_t sz = chunk.size();
   std::streamoff offs{sz + sz % 2 + 8};
 
@@ -219,22 +217,20 @@ iter &iter::operator++() {
 }
 
 iter iter::operator++(int) {
-  auto im = std::make_unique<riffcpp::Chunk::iterator::impl>();
+  auto im = new riffcpp::Chunk::iterator::impl();
   im->m_stream = pimpl->m_stream;
   im->m_pos = pimpl->m_pos;
   im->m_limit = pimpl->m_limit;
 
   this->operator++();
-  return iter(std::move(im));
+  return iter{im};
 }
 
-riffcpp::Chunk::iterator::~iterator() = default;
-
 riffcpp::Chunk::iterator::iterator(const iter &it) {
-  auto im = std::make_unique<riffcpp::Chunk::iterator::impl>();
+  auto im = new riffcpp::Chunk::iterator::impl();
   im->m_stream = it.pimpl->m_stream;
   im->m_pos = it.pimpl->m_pos;
   im->m_limit = it.pimpl->m_limit;
 
-  pimpl = std::move(im);
+  pimpl = im;
 }

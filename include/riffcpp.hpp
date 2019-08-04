@@ -4,11 +4,7 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
-#include <istream>
 #include <iterator>
-#include <memory>
-#include <string>
-
 
 #include "riffcpp_export.h"
 
@@ -19,13 +15,16 @@ namespace riffcpp {
     InvalidFile = 2
   };
 
-  class RIFFCPP_EXPORT Error : public std::runtime_error {
+  class RIFFCPP_EXPORT Error {
     ErrorType m_type;
+    const char *m_message;
 
   public:
-    Error(const std::string &message, ErrorType type);
+    constexpr Error(const char *message, ErrorType type)
+      : m_type(type), m_message(message) {}
 
-    ErrorType type() const;
+    constexpr ErrorType type() const { return m_type; }
+    constexpr const char *what() const { return m_message; }
   };
 
   /// Represents a FourCC
@@ -55,10 +54,10 @@ namespace riffcpp {
   private:
     class impl;
 
-    std::unique_ptr<impl> pimpl;
+    impl *pimpl;
     friend class iterator;
 
-    Chunk(std::unique_ptr<impl> &&impl);
+    Chunk(impl *impl);
 
   public:
     // Loads a chunk from a file
@@ -89,9 +88,9 @@ namespace riffcpp {
     /// Provides a way to iterate over subchunks
     class RIFFCPP_EXPORT iterator {
       class impl;
-      std::unique_ptr<riffcpp::Chunk::iterator::impl> pimpl;
+      riffcpp::Chunk::iterator::impl *pimpl;
 
-      iterator(std::unique_ptr<riffcpp::Chunk::iterator::impl> &&impl);
+      iterator(riffcpp::Chunk::iterator::impl *impl);
 
       friend class Chunk;
 
