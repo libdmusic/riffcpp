@@ -1,4 +1,4 @@
-version: 1.0.0.{build}
+version: 2.2.0.{build}
 image:
 - Visual Studio 2017
 - Ubuntu1804
@@ -40,7 +40,7 @@ for:
     - ctest -C $CONFIGURATION
 
   after_test:
-  - cpack -G ZIP -C $CONFIGURATION -D CPACK_PACKAGE_FILE_NAME=riffcpp-1.0.0-$CONFIGURATION-$LINKING
+  - cpack -G ZIP -C $CONFIGURATION -D CPACK_PACKAGE_FILE_NAME=riffcpp-2.2.0-$CONFIGURATION-$LINKING
 -
   matrix:
     only:
@@ -60,7 +60,7 @@ for:
     - if %LINKING%==static (ctest -C %CONFIGURATION%)
 
   after_test:
-    - cpack -G ZIP -C %CONFIGURATION% -D CPACK_PACKAGE_FILE_NAME=riffcpp-1.0.0-%PLATFORM%-%CONFIGURATION%-%LINKING%
+    - cpack -G ZIP -C %CONFIGURATION% -D CPACK_PACKAGE_FILE_NAME=riffcpp-2.2.0-%PLATFORM%-%CONFIGURATION%-%LINKING%
 
 
 artifacts:
