@@ -8,6 +8,8 @@ add_library(RiffCpp::riffcpp ALIAS riffcpp)
 
 set(RIFFCPP_EXAMPLE_INSTALL_DIR "bin" CACHE "PATH" "Where to install the example executable")
 option(RIFFCPP_INSTALL_EXAMPLE "Install example executable" ON)
+option(RIFFCPP_INSTALL_HEADERS "Install development headers" ON)
+option(RIFFCPP_INSTALL_LIB "Install library binary" ON)
 option(RIFFCPP_BIGENDIAN "Whether to build as if the target system is Big Endian" OFF)
 
 include(GenerateExportHeader)
@@ -24,65 +26,73 @@ target_include_directories(riffcpp
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-        $<INSTALL_INTERFACE:include>
 )
 
 if(RIFFCPP_BIGENDIAN)
     target_compile_definitions(riffpp PRIVATE RIFFCPP_BIGENDIAN)
 endif()
+
+if(RIFFCPP_INSTALL_HEADERS)
+    target_include_directories(riffcpp PUBLIC $<INSTALL_INTERFACE:include>)
+endif()
+
 add_executable(riff_dump ${CMAKE_CURRENT_LIST_DIR}/src/test.cpp)
 target_link_libraries(riff_dump PRIVATE riffcpp)
 
 include(GNUInstallDirs)
 
 # install library files needed for linking
-install(
-    TARGETS riffcpp
-    EXPORT riffcpp-targets
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+if(RIFFCPP_INSTALL_LIB)
+    install(
+        TARGETS riffcpp
+        EXPORT riffcpp-targets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+endif()
 
-# install the public header files
-install(
-    DIRECTORY ${CMAKE_SOURCE_DIR}/include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+if(RIFFCPP_INSTALL_HEADERS)
+    # install the public header files
+    install(
+        DIRECTORY ${CMAKE_SOURCE_DIR}/include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-install(
-    FILES ${PROJECT_BINARY_DIR}/riffcpp_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+    install(
+        FILES ${PROJECT_BINARY_DIR}/riffcpp_export.h
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-# installs the *cmake files in share directory
-install(
-    EXPORT riffcpp-targets
-    FILE riffcpp-targets.cmake
-    NAMESPACE riffcpp::
-    DESTINATION share/riffcpp
-)
+    # installs the *cmake files in share directory
+    install(
+        EXPORT riffcpp-targets
+        FILE riffcpp-targets.cmake
+        NAMESPACE riffcpp::
+        DESTINATION share/riffcpp
+    )
 
-include(CMakePackageConfigHelpers)
+    include(CMakePackageConfigHelpers)
 
-write_basic_package_version_file(
-    ${CMAKE_BINARY_DIR}/cmake/riffcpp-config-version.cmake
-    VERSION ${RIFFCPP_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
-
-configure_package_config_file(
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/riffcpp-config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/cmake/riffcpp-config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/riffcpp
-)
-
-install(
-    FILES
-        ${CMAKE_BINARY_DIR}/cmake/riffcpp-config.cmake
+    write_basic_package_version_file(
         ${CMAKE_BINARY_DIR}/cmake/riffcpp-config-version.cmake
-    DESTINATION share/riffcpp
-)
+        VERSION ${RIFFCPP_VERSION}
+        COMPATIBILITY AnyNewerVersion
+    )
+
+    configure_package_config_file(
+        ${CMAKE_CURRENT_LIST_DIR}/cmake/riffcpp-config.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake/riffcpp-config.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/riffcpp
+    )
+
+    install(
+        FILES
+            ${CMAKE_BINARY_DIR}/cmake/riffcpp-config.cmake
+            ${CMAKE_BINARY_DIR}/cmake/riffcpp-config-version.cmake
+        DESTINATION share/riffcpp
+    )
+endif()
 
 if(RIFFCPP_INSTALL_EXAMPLE)
     install(
