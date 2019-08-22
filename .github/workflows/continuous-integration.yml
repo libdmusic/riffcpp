@@ -5,11 +5,6 @@ jobs:
   build:
     name: Linux build
     runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        env:
-          build_shared: ['OFF', 'ON']
-          build_config: ['Debug', 'Release']
     steps:
     - run: mkdir build
     - run: cd build
