@@ -1,11 +1,14 @@
-name: Build test
-on: [push, pull-request]
+name: Build & test
+
+on: [push]
 
 jobs:
   build:
-    name: Linux build
-    runs-on: ubuntu-18.04
+
+    runs-on: ubuntu-latest
+    
     steps:
+    - uses: actions/checkout@v1
     - run: mkdir build
     - run: cd build
     - run: cmake ${GITHUB_WORKSPACE} -DBUILD_SHARED_LIBS=${BUILD_SHARED} -DCMAKE_BUILD_TYPE=${BUILD_CONFIG} -DBUILD_TESTING=ON
