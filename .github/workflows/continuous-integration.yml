@@ -1,0 +1,19 @@
+name: Build test
+# This workflow is triggered on pushes to the repository.
+on: [push]
+
+jobs:
+  build:
+    name: Linux build
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        env:
+          build_shared: ['OFF', 'ON']
+          build_config: ['Debug', 'Release']
+    steps:
+    - run: mkdir build
+    - run: cd build
+    - run: cmake ${GITHUB_WORKSPACE} -DBUILD_SHARED_LIBS=${BUILD_SHARED} -DCMAKE_BUILD_TYPE=${BUILD_CONFIG} -DBUILD_TESTING=ON
+    - run: cmake --build .
+    - run: ctest
