@@ -8,6 +8,7 @@ add_library(RiffCpp::riffcpp ALIAS riffcpp)
 
 set(RIFFCPP_EXAMPLE_INSTALL_DIR "bin" CACHE "PATH" "Where to install the example executable")
 option(RIFFCPP_INSTALL_EXAMPLE "Install example executable" ON)
+option(RIFFCPP_BIGENDIAN "Whether to build as if the target system is Big Endian" OFF)
 
 include(GenerateExportHeader)
 generate_export_header(riffcpp)
@@ -26,6 +27,9 @@ target_include_directories(riffcpp
         $<INSTALL_INTERFACE:include>
 )
 
+if(RIFFCPP_BIGENDIAN)
+    target_compile_definitions(riffpp PRIVATE RIFFCPP_BIGENDIAN)
+endif()
 add_executable(riff_dump ${CMAKE_CURRENT_LIST_DIR}/src/test.cpp)
 target_link_libraries(riff_dump PRIVATE riffcpp)
 

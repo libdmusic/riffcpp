@@ -1,4 +1,5 @@
 #include "membuffer.hpp"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -37,9 +38,14 @@ static std::uint32_t read_size(std::shared_ptr<std::istream> stream,
                                std::streampos chunk_pos) {
   std::streamoff offs{4};
   stream->seekg(chunk_pos + offs);
-  uint32_t read_size;
-  stream->read(reinterpret_cast<char *>(&read_size), 4);
-  return read_size;
+  alignas(std::uint32_t) std::array<char, 4> read_size;
+  stream->read(read_size.data(), 4);
+
+#if RIFFCPP_BIGENDIAN
+  std::reverse(std::begin(read_size), std::end(read_size));
+#endif
+
+  return *reinterpret_cast<std::uint32_t *>(read_size.data());
 }
 
 static riffcpp::FourCC read_size_as_id(std::shared_ptr<std::istream> stream,
