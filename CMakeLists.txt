@@ -46,6 +46,7 @@ if(RIFFCPP_INSTALL_LIB)
     install(
         TARGETS riffcpp
         EXPORT riffcpp-targets
+        COMPONENT runtime
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -57,11 +58,13 @@ if(RIFFCPP_INSTALL_HEADERS)
     install(
         DIRECTORY ${CMAKE_SOURCE_DIR}/include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        COMPONENT devel
     )
 
     install(
         FILES ${PROJECT_BINARY_DIR}/riffcpp_export.h
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        COMPONENT devel
     )
 
     # installs the *cmake files in share directory
@@ -70,6 +73,7 @@ if(RIFFCPP_INSTALL_HEADERS)
         FILE riffcpp-targets.cmake
         NAMESPACE riffcpp::
         DESTINATION share/riffcpp
+        COMPONENT devel
     )
 
     include(CMakePackageConfigHelpers)
@@ -91,6 +95,7 @@ if(RIFFCPP_INSTALL_HEADERS)
             ${CMAKE_BINARY_DIR}/cmake/riffcpp-config.cmake
             ${CMAKE_BINARY_DIR}/cmake/riffcpp-config-version.cmake
         DESTINATION share/riffcpp
+        COMPONENT devel
     )
 endif()
 
@@ -98,6 +103,7 @@ if(RIFFCPP_INSTALL_EXAMPLE)
     install(
         TARGETS riff_dump
         RUNTIME DESTINATION ${RIFFCPP_EXAMPLE_INSTALL_DIR}
+        COMPONENT example
     )
 endif()
 
@@ -111,10 +117,46 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Simple library for reading RIFF files")
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
+set(CPACK_DEBIAN_RUNTIME_PACKAGE_NAME "riffcpp")
+set(CPACK_DEBIAN_DEVEL_PACKAGE_NAME "riffcpp-dev")
+set(CPACK_DEBIAN_EXAMPLE_PACKAGE_NAME "riffcpp-utils")
+set(CPACK_DEBIAN_RUNTIME_FILE_NAME riffcpp_${CPACK_PACKAGE_VERSION}.deb)
+set(CPACK_DEBIAN_DEVEL_FILE_NAME riffcpp-dev_${CPACK_PACKAGE_VERSION}.deb)
+set(CPACK_DEBIAN_EXAMPLE_FILE_NAME riffcpp-utils_${CPACK_PACKAGE_VERSION}.deb)
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.14), libstdc++6 (>= 5.2), libgcc1 (>= 1:3.0)")
+set(CPACK_DEBIAN_DEVEL_PACKAGE_DEPENDS "${CPACK_DEBIAN_PACKAGE_DEPENDS}, riffcpp (>= ${CPACK_PACKAGE_VERSION}), riffcpp (<< 2.3)")
+set(CPACK_DEBIAN_EXAMPLE_PACKAGE_DEPENDS "${CPACK_DEBIAN_PACKAGE_DEPENDS}, riffcpp (>= ${CPACK_PACKAGE_VERSION}), riffcpp (<< 2.3)")
+set(CPACK_DEB_COMPONENT_INSTALL ON)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 
 include(CPack)
+
+if(RIFFCPP_INSTALL_HEADERS)
+    cpack_add_component(
+        devel
+        DISPLAY_NAME "Header files"
+        DESCRIPTION "Required if you need to compile programs that depend on this library"
+        DEPENDS runtime
+    )
+endif()
+
+if(RIFFCPP_INSTALL_LIB)
+    cpack_add_component(
+        runtime
+        DISPLAY_NAME "Runtime library"
+        REQUIRED
+    )
+endif()
+
+if(RIFFCPP_INSTALL_EXAMPLE)
+    cpack_add_component(
+        example
+        DISPLAY_NAME "Example program"
+        DEPENDS runtime
+    )
+endif()
 
 include(CTest)
 add_subdirectory(tests)
