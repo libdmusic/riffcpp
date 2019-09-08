@@ -107,26 +107,34 @@ int main(int argc, char *argv[]) {
 If you only want to install the library, create the file
 `/etc/apt/sources.list.d/libdmusic.list` and put the following line inside it:
 
-    deb [trusted=yes] https://repo.libdmusic.org/apt/ /
+```sh
+deb [trusted=yes] https://repo.libdmusic.org/apt/ /
+```
 
 Then, run
 
-    sudo apt update
-    sudo apt install riffcpp # you'll also need riffcpp-dev if you need to compile programs that use riffcpp
+```sh
+sudo apt update
+sudo apt install riffcpp # you'll also need riffcpp-dev if you need to compile programs that use riffcpp
+```
 
 ### On Windows and other platforms using `vcpkg`
 
 [vcpkg](https://github.com/Microsoft/vcpkg) already has a portfile for `riffcpp`,
 so you can just do
 
-    vcpkg install riffcpp
+```sh
+vcpkg install riffcpp
+```
 
 ## Building from sources
 
 After downloading the sources (either by `git clone` or archive), run the following commands:
 
-    mkdir build_riffcpp
-    cd build_riffcpp
-    cmake path/to/riffcpp
-    cmake --build .
-    cmake --build . --target INSTALL # Only if you want to install the library
+```sh
+mkdir build_riffcpp
+cd build_riffcpp
+cmake path/to/riffcpp
+cmake --build .
+cmake --build . --target INSTALL # Only if you want to install the library
+```
