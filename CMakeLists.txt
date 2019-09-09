@@ -71,7 +71,7 @@ if(RIFFCPP_INSTALL_HEADERS)
     install(
         EXPORT riffcpp-targets
         FILE riffcpp-targets.cmake
-        NAMESPACE riffcpp::
+        NAMESPACE libdmusic::
         DESTINATION share/riffcpp
         COMPONENT devel
     )
