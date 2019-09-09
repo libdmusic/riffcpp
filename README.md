@@ -115,7 +115,7 @@ Then, run
 
 ```sh
 sudo apt update
-sudo apt install riffcpp # you'll also need riffcpp-dev if you need to compile programs that use riffcpp
+sudo apt install libriffcpp # you'll also need libriffcpp-dev if you need to compile programs that use riffcpp
 ```
 
 ### On Windows and other platforms using `vcpkg`
