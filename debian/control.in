@@ -1,6 +1,5 @@
 Source: libriffcpp
 Priority: optional
-Version: @VERSION@
 Maintainer: @MAINTAINER@
 Build-Depends: debhelper (>= 10), cmake, g++ (>= 4:5.0.0)
 Standards-Version: 4.0.0
