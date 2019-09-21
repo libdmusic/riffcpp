@@ -1,0 +1,28 @@
+Source: libriffcpp
+Priority: optional
+Version: @VERSION@
+Maintainer: @MAINTAINER@
+Build-Depends: debhelper (>= 10), cmake, g++ (>= 4:5.0.0)
+Standards-Version: 4.0.0
+Section: libs
+Homepage: https://github.com/libdmusic/riffcpp
+
+Package: libriffcpp
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Simple library for reading RIFF files
+ Simple library for reading RIFF files.
+
+Package: libriffcpp-dev
+Section: libdevel
+Architecture: any
+Depends: libriffcpp (= ${binary:Version}), ${misc:Depends}
+Description: Header files and libraries for developing applications for libriffcpp
+ Header files and libraries for developing applications for libriffcpp.
+
+Package: libriffcpp-utils
+Section: utils
+Architecture: any
+Depends: libriffcpp (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Several utilities for reading RIFF files
+ Several utilities for reading RIFF files.
