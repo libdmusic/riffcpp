@@ -1,8 +1,8 @@
-set(VERSION "2.2.4")
-set(MAINTAINER "Francesco Bertolaccini <francesco@bertolaccini.dev>")
-set(COPYRIGHT "2019 - ${MAINTAINER}")
-set(DISTROSERIES "bionic")
-set(SUBVERSION "1")
+set(VERSION "2.2.4" CACHE STRING "Version of the package")
+set(MAINTAINER "Francesco Bertolaccini <francesco@bertolaccini.dev>" CACHE STRING "Maintainer of the package")
+set(COPYRIGHT "2019 - ${MAINTAINER}" CACHE STRING "Copyright string of the package")
+set(DISTROSERIES "bionic" CACHE STRING "Distroseries of the package")
+set(SUBVERSION "1" CACHE STRING "Subversion of the package")
 string(TIMESTAMP DPKG_DATE "%a, %d %b %Y %H:%M:%S +0000" UTC)
 
 configure_file(debian/changelog.in debian/changelog @ONLY)
