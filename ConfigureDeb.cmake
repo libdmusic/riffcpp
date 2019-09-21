@@ -1,6 +1,8 @@
 set(VERSION "2.2.4")
 set(MAINTAINER "Francesco Bertolaccini <francesco@bertolaccini.dev>")
 set(COPYRIGHT "2019 - ${MAINTAINER}")
+set(DISTROSERIES "bionic")
+set(SUBVERSION "1")
 string(TIMESTAMP DPKG_DATE "%a, %d %b %Y %H:%M:%S +0000" UTC)
 
 configure_file(debian/changelog.in debian/changelog @ONLY)

@@ -1,4 +1,4 @@
-libriffcpp (@VERSION@-1) unstable; urgency=low
+libriffcpp (@VERSION@-@SUBVERSION@) @DISTROSERIES@; urgency=low
 
   * Auto-generated
 
