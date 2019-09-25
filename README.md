@@ -104,11 +104,9 @@ int main(int argc, char *argv[]) {
 
 ### On Debian and Ubuntu
 
-If you only want to install the library, create the file
-`/etc/apt/sources.list.d/libdmusic.list` and put the following line inside it:
-
+Add the libdmusic PPA to your repository:
 ```sh
-deb [trusted=yes] https://repo.libdmusic.org/apt/ /
+sudo add-apt-repository ppa:libdmusic/unstable
 ```
 
 Then, run
