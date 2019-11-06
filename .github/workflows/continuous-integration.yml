@@ -3,8 +3,8 @@ name: Build & test
 on: [push]
 
 jobs:
-  build:
-
+  build-ubuntu:
+    name: Ubuntu build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -13,8 +13,36 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - run: mkdir build
-    - run: cd build
-    - run: cmake ${GITHUB_WORKSPACE} -DBUILD_SHARED_LIBS=${{ matrix.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_TESTING=ON
-    - run: cmake --build .
-    - run: ctest
+    - name: Prepare
+      run: mkdir build
+    - name: Configure
+      working-directory: build
+      run: cmake ${GITHUB_WORKSPACE} -DBUILD_SHARED_LIBS=${{ matrix.shared }} -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_TESTING=ON
+    - name: Build
+      working-directory: build
+      run: cmake --build .
+    - name: Test
+      working-directory: build
+      run: ctest
+
+    build-windows:
+    name: Windows build
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        shared: ['ON', 'OFF']
+        buildtype: ['Debug', 'Release']
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Prepare
+      run: mkdir build
+    - name: Configure
+      working-directory: build
+      run: cmake ${GITHUB_WORKSPACE} -DBUILD_SHARED_LIBS=${{ matrix.shared }} -DBUILD_TESTING=ON
+    - name: Build
+      working-directory: build
+      run: cmake --build . --config {{ matrix.buildtype }}
+    - name: Test
+      working-directory: build
+      run: ctest
