@@ -39,7 +39,7 @@ jobs:
       run: mkdir build
     - name: Configure
       working-directory: build
-      run: cmake ${GITHUB_WORKSPACE} -DBUILD_SHARED_LIBS=${{ matrix.shared }} -DBUILD_TESTING=ON
+      run: cmake $env:GITHUB_WORKSPACE -DBUILD_SHARED_LIBS=${{ matrix.shared }} -DBUILD_TESTING=ON
     - name: Build
       working-directory: build
       run: cmake --build . --config {{ matrix.buildtype }}
