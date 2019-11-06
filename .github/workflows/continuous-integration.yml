@@ -25,7 +25,7 @@ jobs:
       working-directory: build
       run: ctest
 
-    build-windows:
+  build-windows:
     name: Windows build
     runs-on: windows-latest
     strategy:
